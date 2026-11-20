@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Labora – Reserva de Laboratórios</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+
+<body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <symbol id="i-flask" viewBox="0 0 24 24">
+            <path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2.2h12.4a1.5 1.5 0 0 0 1.3-2.2L14 9V3M7.5 15h9" />
+        </symbol>
+        <symbol id="i-grid" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+        </symbol>
+        <symbol id="i-cal" viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="17" rx="2" />
+            <path d="M16 2v4M8 2v4M3 10h18" />
+        </symbol>
+        <symbol id="i-users" viewBox="0 0 24 24">
+            <circle cx="9" cy="8" r="3.5" />
+            <path d="M2.5 20c.5-3.5 3-5.5 6.5-5.5s6 2 6.5 5.5M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c2 .6 3.3 2.3 3.5 5.2" />
+        </symbol>
+        <symbol id="i-search" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+        </symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 7v5l3 2" />
+        </symbol>
+        <symbol id="i-check" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9" />
+            <path d="m8 12 3 3 5-6" />
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+        </symbol>
+    </svg>
+
+    <aside>
+        <div class="brand">
+            <div class="logo"><svg>
+                    <use href="#i-flask" />
+                </svg></div>
+            <div><b>labora</b><small>ESPAÇOS ACADÊMICOS</small></div>
+        </div>
+        <nav aria-label="Principal">
+            <button class="nav" data-page="labs" aria-current="page"><svg>
+                    <use href="#i-grid" />
+                </svg>Laboratórios</button>
+            <button class="nav" data-page="reservas"><svg>
+                    <use href="#i-cal" />
+                </svg>Reservas <span class="badge" id="navCount">0</span></button>
+        </nav>
+        <div class="user">
+            <div class="avatar">RP</div>
+            <div><b>Professor Teste</b><small>Professor · Mat. 20260001</small></div>
+        </div>
+    </aside>
+
+    <main>
+        <!-- RF01: consulta de laboratórios -->
+        <section id="page-labs">
+            <div class="page-head">
+                <div>
+                    <p class="eyebrow">VISÃO GERAL</p>
+                    <h1>Laboratórios</h1>
+                    <p class="sub">Consulte a capacidade e disponibilidade dos espaços acadêmicos.</p>
+                </div>
+                <button class="btn" data-page="reservas">Ver minhas reservas <svg>
+                        <use href="#i-arrow" />
+                    </svg></button>
+            </div>
+            <div class="toolbar">
+                <div class="search"><svg>
+                        <use href="#i-search" />
+                    </svg><input id="busca" type="search" placeholder="Buscar laboratório..."
+                        aria-label="Buscar laboratório"></div>
+                <div class="count" id="contagem" aria-live="polite"></div>
+            </div>
+            <div class="grid" id="grid"></div>
+        </section>
+
+        <!-- RF05: listagem das reservas -->
+        <section id="page-reservas" hidden>
+            <div class="page-head">
+                <div>
+                    <p class="eyebrow">AGENDA ACADÊMICA</p>
+                    <h1>Minhas reservas</h1>
+                    <p class="sub">Acompanhe os laboratórios reservados e organize suas próximas atividades.</p>
+                </div>
+                <button class="btn lime" id="novaReserva"><svg>
+                        <use href="#i-cal" />
+                    </svg>Nova reserva</button>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="ico"><svg>
+                            <use href="#i-cal" />
+                        </svg></div>
+                    <div><small>Reservas ativas</small><b id="stAtivas">0</b></div>
+                </div>
+                <div class="stat">
+                    <div class="ico"><svg>
+                            <use href="#i-clock" />
+                        </svg></div>
+                    <div><small>Próxima reserva</small><b id="stProx">—</b></div>
+                </div>
+                <div class="stat">
+                    <div class="ico"><svg>
+                            <use href="#i-check" />
+                        </svg></div>
+                    <div><small>Status</small><b id="stStatus">—</b></div>
+                </div>
+            </div>
+            <div class="panel">
+                <header>
+                    <h2>Reservas confirmadas</h2><small id="stRegistros"></small>
+                </header>
+                <table id="tabela" hidden>
+                    <thead>
+                        <tr>
+                            <th>LABORATÓRIO</th>
+                            <th>DATA</th>
+                            <th>HORÁRIO</th>
+                            <th>FINALIDADE</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpo"></tbody>
+                </table>
+                <div class="none" id="vazio">Você ainda não fez nenhuma reserva. Escolha “Nova reserva” para começar.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- RF02 / RF03 / RF04: formulário de reserva -->
+    <dialog id="dlg" aria-labelledby="dlgTitulo">
+        <form id="form" novalidate>
+            <h2 id="dlgTitulo">Nova reserva</h2>
+            <p class="who">Professor: Rafael Pacheco · Matrícula 20260001</p>
+            <div class="formerr" id="formErr" role="alert" hidden></div>
+            <div class="field" id="f-lab"><label for="lab">Laboratório <i>*</i></label>
+                <select id="lab"></select>
+                <p class="err" id="e-lab"></p>
+            </div>
+            <div class="row">
+                <div class="field" id="f-data"><label for="data">Data <i>*</i></label><input type="date" id="data">
+                    <p class="err" id="e-data"></p>
+                </div>
+                <div class="field" id="f-hora"><label for="hora">Horário <i>*</i></label><select id="hora"></select>
+                    <p class="err" id="e-hora"></p>
+                </div>
+            </div>
+            <div class="field" id="f-tipo"><label for="tipo">Finalidade <i>*</i></label>
+                <select id="tipo">
+                    <option value="">Selecione...</option>
+                    <option value="regular">Aula regular</option>
+                    <option value="pratica">Aula prática</option>
+                    <option value="monitoria">Monitoria</option>
+                    <option value="pesquisa">Pesquisa</option>
+                </select>
+                <p class="hint" id="h-tipo" hidden>Este laboratório tem menos de 30 lugares e não aceita aula regular.
+                </p>
+                <p class="err" id="e-tipo"></p>
+            </div>
+            <div class="field" id="f-det"><label for="det">Descrição da atividade <i>*</i></label><input id="det"
+                    maxlength="80" placeholder="Ex.: Prática de redes">
+                <p class="err" id="e-det"></p>
+            </div>
+            <div class="actions"><button type="button" class="btn" id="cancelar">Cancelar</button><button type="submit"
+                    class="btn blue">Confirmar reserva</button></div>
+        </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"><svg>
+            <use href="#i-check" />
+        </svg><span id="toastMsg"></span></div>
+
+    <script src="scripts/script.js"></script>
+</body>
+
+</html>
