@@ -22,6 +22,3 @@ flowchart LR
     P --- RF05
 ```
 
-## Imagem do Diagrama
-
-![Diagrama de Casos de Uso](./atividade_maturidade.png)
